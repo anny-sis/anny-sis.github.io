@@ -45,25 +45,40 @@
 </head>
 <body>
     <h1>Anny locked for</h1>
-    <div class="stopwatch" id="stopwatch">Loading...</div>
+    <div class="stopwatch" id="lockedsw">Loading...</div>
 
+    <br/>
+    
+    <h1>Anny denied for</h1>
+    <div class="stopwatch" id="deniedsw">Loading...</div>
+    
     <script>
-        const startDate = new Date('2024-11-16T19:15:00');
+        const lockedDate = new Date('2024-11-16T19:15:00');
+        const deniedDate = new Date('2024-11-08T17:34:01');    
 
-        function updateStopwatch() {
+        function updateStopwatch(id, start) {
             const now = new Date();
-            const elapsed = now - startDate;
+            const elapsed = now - start;
 
             const days = Math.floor(elapsed / (1000 * 60 * 60 * 24));
             const hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24);
             const minutes = Math.floor((elapsed / (1000 * 60)) % 60);
             const seconds = Math.floor((elapsed / 1000) % 60);
 
-            const stopwatchElement = document.getElementById('stopwatch');
+            const stopwatchElement = document.getElementById(id);
             stopwatchElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
         }
 
-        setInterval(updateStopwatch, 1000);
+        function updateLockedSw() {
+            updateStopwatch('lockedsw', lockedDate)
+        }
+
+        function updateLockedDn() {
+            updateStopwatch('deniedsw', deniedDate)
+        }
+
+        setInterval(updateLockedSw, 1000);
+        setInterval(updateLockedDn, 1000);
 
         updateStopwatch();
     </script>
