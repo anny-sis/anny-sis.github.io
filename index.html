@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locked Anny</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Black background */
+            color: #ff69b4; /* Pink text */
+            text-align: center;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .stopwatch {
+            font-size: 3rem;
+            font-weight: bold;
+            padding: 20px;
+            border: 2px solid #ff69b4; /* Pink border */
+            border-radius: 10px;
+            background-color: #000; /* Black background inside the stopwatch */
+            color: #ff69b4; /* Pink text inside the stopwatch */
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.5); /* Pink glow shadow */
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            .stopwatch {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Anny locked for</h1>
+    <div class="stopwatch" id="stopwatch">Loading...</div>
+
+    <script>
+        const startDate = new Date('2024-11-16T19:15:00');
+
+        function updateStopwatch() {
+            const now = new Date();
+            const elapsed = now - startDate;
+
+            const days = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((elapsed / (1000 * 60)) % 60);
+            const seconds = Math.floor((elapsed / 1000) % 60);
+
+            const stopwatchElement = document.getElementById('stopwatch');
+            stopwatchElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        setInterval(updateStopwatch, 1000);
+
+        updateStopwatch();
+    </script>
+</body>
+</html>
