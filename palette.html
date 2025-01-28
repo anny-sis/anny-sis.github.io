@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Palette</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            transition: background-color 0.5s;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .color-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 10px;
+        }
+        .color-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .remove-btn {
+            background-color: rgba(0,0,0,.0);
+            border: none;
+            color: white;
+            padding: 5px;
+            cursor: pointer;
+        }
+        .draggable {
+            user-select: none;
+        }
+    </style>
+</head>
+<body onclick="resetBackground()">
+    <div class="container">
+        <!-- <h2>Color Palette</h2> -->
+        <!-- <input type="text" id="colorLabel" placeholder="Color Label"> -->
+        <!-- <input type="color" id="colorPicker"> -->
+        <!-- <button onclick="addColor()">Add New Color</button> -->
+        <!-- <button onclick="exportPalette()">Export Palette</button> -->
+        <!-- <button onclick="importPalette()">Import Palette</button> -->
+        <div id="colorList" class="color-list"></div>
+    </div>
+
+    <script>
+        let draggedItem = null;
+        const referenceColor = { r: 236, g: 226, b: 234 };
+
+        function parseRGB(rgbString) {
+            const match = rgbString.match(/\d+/g);
+            return match ? { r: parseInt(match[0]), g: parseInt(match[1]), b: parseInt(match[2]) } : null;
+        }
+
+        function calculateColorDistance(rgb) {
+            return Math.sqrt(
+                Math.pow(referenceColor.r - rgb.r, 2) +
+                Math.pow(referenceColor.g - rgb.g, 2) +
+                Math.pow(referenceColor.b - rgb.b, 2)
+            ).toFixed(2);
+        }
+
+        function sortColors() {
+            const colorList = document.getElementById("colorList");
+            const items = Array.from(colorList.children);
+            items.sort((a, b) => {
+                const distanceA = parseFloat(a.getAttribute("data-distance"));
+                const distanceB = parseFloat(b.getAttribute("data-distance"));
+                return distanceA - distanceB;
+            });
+            items.forEach(item => colorList.appendChild(item));
+        }
+
+        function addColor(label = null, color = null) {
+            const colorList = document.getElementById("colorList");
+            //if (!label) label = document.getElementById("colorLabel").value.trim();
+            //if (!color) color = document.getElementById("colorPicker").value;
+            if (!label) return;
+
+            const rgb = parseRGB(color);
+            const distance = rgb ? calculateColorDistance(rgb) : "N/A";
+
+            const item = document.createElement("div");
+            item.className = "color-item draggable";
+            item.style.background = color;
+            item.setAttribute("data-distance", distance);
+            item.draggable = true;
+            item.innerHTML = `${label} (Distance: ${distance}) <button class='remove-btn' onclick='removeColor(event, this)'>X</button>`;
+            
+            item.addEventListener("click", (e) => {
+                e.stopPropagation();
+                document.body.style.backgroundColor = color;
+            });
+            
+            colorList.appendChild(item);
+            sortColors();
+            //document.getElementById("colorLabel").value = "";
+        }
+
+        function removeColor(event, button) {
+            event.stopPropagation();
+            button.parentElement.remove();
+        }
+
+        function resetBackground() {
+            document.body.style.backgroundColor = "white";
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const defaultColors = [
+               ["PINK NUDITY", "rgb(205, 190, 180)"],
+["POETIC PINK", "rgb(198, 190, 195)"],
+["PERFECT PINK", "rgb(200, 174, 167)"],
+["PRECIOUS PINK", "rgb(188, 168, 170)"],
+["PRIMROSE PINK", "rgb(164, 119, 123)"],
+["3002 STYLISH PINK", "rgb(228, 220, 216)"],
+["PPG1050-1 BARE PINK", "rgb(235, 229, 229)"],
+["PPG1050-2 PINK PAIL", "rgb(225, 202, 209)"],
+["PPG1058-4 MESA PINK", "rgb(208, 169, 161)"],
+["PPG1181-6 PARIS PINK", "rgb(197, 102, 137)"],
+["PPG1183-3 ANIME PINK", "rgb(224, 186, 198)"],
+["PPG1184-4 PINK PUNCH", "rgb(224, 138, 153)"],
+["PPG1189-3 PINK TINGE", "rgb(237, 196, 189)"],
+["PPG1195-3 MELON PINK", "rgb(233, 207, 192)"],
+["PPG1045-4 PLANET PINK", "rgb(192, 168, 181)"],
+["PPG1183-6 CHERRY PINK", "rgb(177, 90, 114)"],
+["PPG1186-4 PINK FLAMBE", "rgb(214, 134, 142)"],
+["PPG1190-1 LIMOGE PINK", "rgb(236, 221, 218)"],
+["PPG1051-2 PINK CARDOON", "rgb(226, 195, 198)"],
+["PPG1052-6 MARTIAN PINK", "rgb(128, 76, 80)"],
+["PPG1182-1 PINK BOOTIES", "rgb(231, 222, 226)"],
+["PPG1182-4 GERBERA PINK", "rgb(210, 157, 177)"],
+["PPG1189-2 PINK SANGRIA", "rgb(238, 215, 208)"],
+["RP3392-5004 - PINK POP", "rgb(200, 132, 181)"],
+["PPG1051-4 PINK CLAY POT", "rgb(199, 136, 139)"],
+["PPG1182-6 GERANIUM PINK", "rgb(177, 96, 127)"],
+["PPG1184-2 PLEASING PINK", "rgb(235, 200, 207)"],
+["PPG1251-5 PINKBERRY ICE", "rgb(186, 144, 186)"],
+["Y0214-0639 - SHELL PINK", "rgb(223, 212, 211)"],
+["Y3494-0579 - PINK PEARL", "rgb(236, 226, 234)"],
+["YR0363-2490 - PINK CLAY", "rgb(172, 141, 133)"],
+["YR0538-2719 - PINK SAND", "rgb(198, 162, 139)"],
+["PPG17-09 FLORENTINE PINK", "rgb(179, 104, 141)"],
+["R0099-2248 - COCOON PINK", "rgb(209, 172, 178)"],
+["R0100-1852 - PINK SHADOW", "rgb(160, 137, 140)"],
+["R0108-4204 - SPRING PINK", "rgb(231, 155, 168)"],
+["RP3429-4814 - PINK STORM", "rgb(152, 102, 134)"],
+["RP3463-6287 - PINK PUNCH", "rgb(178, 94, 143)"],
+["RP3556-6471 - PINK AGATE", "rgb(130, 71, 96)"],
+["YR0442-3318 - PINK EARTH", "rgb(222, 171, 149)"],
+["YR0480-1161 - CHALK PINK", "rgb(225, 208, 198)"],
+["YR0505-1178 - PINK STONE", "rgb(214, 197, 187)"],
+["PPG1050-4 MADAGASCAR PINK", "rgb(193, 140, 153)"],
+["PPG1188-2 DREAMHOUSE PINK", "rgb(237, 211, 212)"],
+["PPG17-10 PINK S TRUE LOVE", "rgb(172, 85, 129)"],
+["R0006-1888 - PINK HEATHER", "rgb(181, 154, 162)"],
+["R0248-4306 - ANTIQUE PINK", "rgb(194, 132, 128)"],
+["RP3407-3204 - CLOVER PINK", "rgb(194, 153, 181)"],
+["Y0457-0938 - PINK CHIFFON", "rgb(236, 220, 213)"],
+["PPG1046-3 OLD MISSION PINK", "rgb(204, 188, 198)"],
+["PPG1048-2 LITTLE MISS PINK", "rgb(231, 217, 222)"],
+["R0227-3264 - CINNAMON PINK", "rgb(174, 130, 126)"],
+["YR0463-1323 - PLASTER PINK", "rgb(193, 174, 166)"],
+["PPG1044-5 SOULFUL PINK PETAL", "rgb(177, 132, 155)"],
+            ];
+            defaultColors.forEach(([label, color]) => addColor(label, color));
+        });
+    </script>
+</body>
+</html>
